@@ -1,0 +1,241 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\FrameXML\UI.xsd">
+   <Frame name="FrameTestFrame" enableMouse="true" movable="true">
+      <Scripts>
+         <OnLoad function="Addon_OnLoad"></OnLoad>
+         <OnDragStart>self:StartMoving();</OnDragStart>
+         <OnDragStop>self:StopMovingOrSizing();</OnDragStop>
+      </Scripts>
+      <Size>
+         <AbsDimension x="400" y="450" />
+      </Size>
+      <Anchors>
+         <Anchor point="CENTER" />
+      </Anchors>
+      <Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background" edgeFile="Interface\DialogFrame\UI-DialogBox-Border" tile="true">
+         <BackgroundInsets>
+            <AbsInset left="11" right="12" top="12" bottom="11" />
+         </BackgroundInsets>
+         <TileSize>
+            <AbsValue val="32" />
+         </TileSize>
+         <EdgeSize>
+            <AbsValue val="32" />
+         </EdgeSize>
+      </Backdrop>
+      <Layers>
+         <Layer level="BACKGROUND">
+            <Texture setAllPoints="true">
+               <Color r="0.4" g="0.4" b="0.4" a="0.3" />
+            </Texture>
+         </Layer>
+      </Layers>
+   </Frame>
+
+   <Button inherits="UIPanelButtonTemplate" text="toggle frame">
+      <Size x="80" y="22" />
+      <Scripts>
+         <OnClick function="ToggleSetting"></OnClick>
+      </Scripts>
+      <Anchors>
+         <Anchor point="TOP" />
+      </Anchors>
+      <NormalFont style="GameFontNormal" />
+   </Button>
+
+   <!-- bottom controls -->
+   <Button inherits="UIPanelButtonTemplate" text="Print" parent="FrameTestFrame">
+      <Size x="70" y="30" />
+      <Scripts>
+         <OnClick function="printSlashCommand" />
+      </Scripts>
+      <Anchors>
+         <Anchor point="LEFT">
+            <Offset x="15" y="1" />
+         </Anchor>
+         <Anchor point="BOTTOM">
+            <Offset x="1" y="10" />
+         </Anchor>
+      </Anchors>
+      <NormalFont style="GameFontNormalHuge" />
+   </Button>
+
+   <Button inherits="UIPanelButtonTemplate" text="Who upd" parent="FrameTestFrame">
+      <Size x="70" y="30" />
+      <Scripts>
+         <OnClick function="updateWho" />
+      </Scripts>
+      <Anchors>
+         <Anchor point="LEFT">
+            <Offset x="90" y="1" />
+         </Anchor>
+         <Anchor point="BOTTOM">
+            <Offset x="1" y="10" />
+         </Anchor>
+      </Anchors>
+      <NormalFont style="GameFontNormal" />
+   </Button>
+
+   <!-- scroll -->
+   <Frame name="ScrollWrapper" parent="FrameTestFrame">
+      <Size>
+         <AbsDimension x="320" y="200" />
+      </Size>
+      <Anchors>
+         <Anchor point="TOP">
+            <Offset x="0" y="-10" />
+         </Anchor>
+         <Anchor point="LEFT">
+            <Offset x="15" y="0" />
+         </Anchor>
+      </Anchors>
+      <!--<Layers>
+         <Layer level="ARTWORK">
+            <Texture setAllPoints="true">
+               <Color r="0.5" g="0.5" b="0.5" a="0.3" />
+            </Texture>
+         </Layer>
+      </Layers>-->
+   </Frame>
+
+   <ScrollFrame name="ScrollTable" inherits="UIPanelScrollFrameTemplate">
+      <Anchors>
+         <Anchor point="TOPLEFT">
+            <Offset x="0" y="-10" />
+         </Anchor>
+      </Anchors>
+   </ScrollFrame>
+
+
+   <ScrollFrame name="MySrollFrame" parent="ScrollWrapper" inherits="UIPanelScrollFrameTemplate" virtual="false">
+      <Anchors>
+         <Anchor point="TOPLEFT">
+            <Offset>
+               <AbsDimension x="1" y="-8" />
+            </Offset>
+         </Anchor>
+         <Anchor point="BOTTOMRIGHT">
+            <Offset>
+               <AbsDimension x="30" y="8" />
+            </Offset>
+         </Anchor>
+      </Anchors>
+
+      <Layers>
+         <Layer level="BACKGROUND">
+            <Texture setAllPoint="true">
+               <Color r="0.5" g="0.5" b="0.5" a="0.3" />
+            </Texture>
+         </Layer>
+      </Layers>
+
+      <ScrollChild>
+         <Frame name="ScrollContainer">
+            <Size x="70" y="250" />
+            <Layers>
+               <Layer level="ARTWORK">
+                  <Texture file="Interface\Icons\Spell_Shadow_DemonicFortitude">
+                     <Size x="100" y="100" />
+                     <Anchors>
+                        <Anchor point="CENTER" />
+                     </Anchors>
+                  </Texture>
+               </Layer>
+
+               <Layer level="BACKGROUND">
+                  <Texture setAllPoint="true">
+                     <Color r="0.5" g="0.1" b="0.1" a="0.3" />
+                  </Texture>
+               </Layer>
+            </Layers>
+
+            <Frames>
+               <!-- ЭТОТ ФРЕЙМ можно сделать виртуальным, а в lua от него наследовать и просто изменять текст внутри -->
+               <Frame name="$parentChild" parentKey="child">
+                  <Size x="300" y="25" />
+                  <Anchors>
+                     <Anchor point="TOP">
+                        <Offset>
+                           <AbsDimension x="0" y="0" />
+                        </Offset>
+                     </Anchor>
+
+                     <Anchor point="LEFT">
+                        <Offset>
+                           <AbsDimension x="0" y="0" />
+                        </Offset>
+                     </Anchor>
+                  </Anchors>
+                  <Layers>
+                     <Layer level="BACKGROUND">
+                        <Texture setAllPoint="true">
+                           <Color r="0.5" g="0.5" b="0.5" a="0.3" />
+                        </Texture>
+                     </Layer>
+
+                     <Layer>
+                        <FontString name="$parentFontString" inherits="GameFontNormalSmall" text="Rayofsorrow" justifyH="LEFT" justifyV="TOP">
+                           <Anchors>
+                              <Anchor point="TOP" relativeTo="$parent" x="0" y="0" />
+                              <Anchor point="LEFT" relativeTo="$parent" x="0" y="0" />
+                           </Anchors>
+                        </FontString>
+
+                        <FontString name="$parentFontString" inherits="GameFontNormalSmall" text="80" justifyH="LEFT" justifyV="TOP">
+                           <Anchors>
+                              <Anchor point="TOP" relativeTo="$parent" x="0" y="0" />
+                              <Anchor point="LEFT" relativeTo="$parent" x="80" y="0" />
+                           </Anchors>
+                        </FontString>
+
+                        <FontString name="$parentFontString" inherits="GameFontNormalSmall" text="Рыцарь смерти" justifyH="LEFT" justifyV="TOP">
+                           <Anchors>
+                              <Anchor point="TOP" relativeTo="$parent" x="0" y="0" />
+                              <Anchor point="LEFT" relativeTo="$parent" x="110" y="0" />
+                           </Anchors>
+                        </FontString>
+                     </Layer>
+
+                  </Layers>
+               </Frame>
+            </Frames>
+
+         </Frame>
+      </ScrollChild>
+
+   </ScrollFrame>
+
+   <Frame name="MyScrollChild">
+      <Size>
+         <AbsDimension x="180" y="600" />
+      </Size>
+      <Layers>
+         <Layer level="ARTWORK">
+            <Texture setAllPoints="true">
+               <Color r="0.1" g="0.7" b="0.1" a="0.6" />
+            </Texture>
+         </Layer>
+      </Layers>
+   </Frame>
+
+
+   <Frame name="TableFrame" parent="MyScrollChild">
+      <Anchors>
+         <Anchor point="CENTER">
+            <Offset x="0" y="-10" />
+         </Anchor>
+      </Anchors>
+   </Frame>
+
+   <!-- virtual template from example -->
+   <ScrollFrame name="UIPanelScrollFrameTemplate1" virtual="true" inherits="UIPanelScrollFrameCodeTemplate">
+      <Frames>
+         <Slider name="$parentScrollBar" inherits="UIPanelScrollBarTemplate" parentKey="ScrollBar">
+            <Anchors>
+               <Anchor point="TOPLEFT" relativePoint="TOPRIGHT" x="6" y="-16" />
+               <Anchor point="BOTTOMLEFT" relativePoint="BOTTOMRIGHT" x="6" y="16" />
+            </Anchors>
+         </Slider>
+      </Frames>
+   </ScrollFrame>
+
+</Ui>

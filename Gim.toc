@@ -1,0 +1,8 @@
+## Interface: 30300
+## Title: Gim (guild invite manager)
+## Version: 1.0
+## Notes: Guild invite manager
+## Author: JustMonk
+
+Gim.lua
+Gim.xml
