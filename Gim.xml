@@ -151,7 +151,7 @@
             <Frames>
                <!-- ЭТОТ ФРЕЙМ можно сделать виртуальным, а в lua от него наследовать и просто изменять текст внутри -->
                <Frame name="$parentChild" parentKey="child">
-                  <Size x="300" y="25" />
+                  <Size x="350" y="25" />
                   <Anchors>
                      <Anchor point="TOP">
                         <Offset>
@@ -173,30 +173,50 @@
                      </Layer>
 
                      <Layer>
-                        <FontString name="$parentFontString" inherits="GameFontNormalSmall" text="Rayofsorrow" justifyH="LEFT" justifyV="TOP">
+                        <FontString name="$parentNameFontString" inherits="GameFontNormalSmall" text="Rayofsorrow" justifyH="LEFT" justifyV="TOP">
                            <Anchors>
-                              <Anchor point="TOP" relativeTo="$parent" x="0" y="0" />
+                              <Anchor point="CENTER"/>
                               <Anchor point="LEFT" relativeTo="$parent" x="0" y="0" />
                            </Anchors>
                         </FontString>
 
-                        <FontString name="$parentFontString" inherits="GameFontNormalSmall" text="80" justifyH="LEFT" justifyV="TOP">
+                        <FontString name="$parentLevelFontString" inherits="GameFontNormalSmall" text="80" justifyH="LEFT" justifyV="TOP">
                            <Anchors>
-                              <Anchor point="TOP" relativeTo="$parent" x="0" y="0" />
+                              <Anchor point="CENTER"/>
                               <Anchor point="LEFT" relativeTo="$parent" x="80" y="0" />
                            </Anchors>
                         </FontString>
 
-                        <FontString name="$parentFontString" inherits="GameFontNormalSmall" text="Рыцарь смерти" justifyH="LEFT" justifyV="TOP">
+                        <FontString name="$parentClassFontString" inherits="GameFontNormalSmall" text="Рыцарь смерти" justifyH="LEFT" justifyV="TOP">
                            <Anchors>
-                              <Anchor point="TOP" relativeTo="$parent" x="0" y="0" />
+                              <Anchor point="CENTER"/>
                               <Anchor point="LEFT" relativeTo="$parent" x="110" y="0" />
+                           </Anchors>
+                        </FontString>
+
+                        <FontString name="$parentGuildFontString" inherits="GameFontNormalSmall" text="Без гильдии" justifyH="LEFT" justifyV="TOP">
+                           <Anchors>
+                              <Anchor point="CENTER"/>
+                              <Anchor point="LEFT" relativeTo="$parent" x="200" y="0" />
                            </Anchors>
                         </FontString>
                      </Layer>
 
                   </Layers>
+
+                  <Frames>
+                     <Button inherits="UIPanelButtonTemplate" text="Invite" >
+                        <Size x="45" y="20"/>
+                        <Anchors>
+                           <Anchor point="CENTER"/>
+                           <Anchor point="RIGHT" x="-10" y="0"/>
+                        </Anchors>
+                        <NormalFont style="GameFontNormalSmall"/>
+                      </Button>
+                  </Frames>
+
                </Frame>
+
             </Frames>
 
          </Frame>
@@ -237,5 +257,33 @@
          </Slider>
       </Frames>
    </ScrollFrame>
+
+   <Frame name="EXAMPLE_BUTTON_INSIDE_FRAME" hidden="true">
+      <Size>
+         <AbsDimension x="150" y="150" />
+      </Size>
+      <Anchors>
+         <Anchor point="CENTER" />
+      </Anchors>
+      <Layers>
+        <Layer>
+          <Texture>
+            <Size x="100" y="100" />
+            <Color a="0.5" r="1" g="1" b="1" />
+          </Texture>
+        </Layer>
+      </Layers>
+
+      <Frames>
+         <Button inherits="UIPanelButtonTemplate" text="Big Text" >
+            <Size x="150" y="60"/>
+            <Anchors><Anchor point="CENTER"/></Anchors>
+            <NormalFont style="GameFontNormalHuge"/>
+          </Button>
+      </Frames>
+
+    </Frame>
+
+
 
 </Ui>
