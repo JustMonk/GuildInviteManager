@@ -75,6 +75,38 @@
       <NormalFont style="GameFontNormal" />
    </Button>
 
+   <Button inherits="UIPanelButtonTemplate" text="Create table" parent="FrameTestFrame">
+      <Size x="70" y="30" />
+      <Scripts>
+         <OnClick function="createPlayerTable" />
+      </Scripts>
+      <Anchors>
+         <Anchor point="LEFT">
+            <Offset x="165" y="1" />
+         </Anchor>
+         <Anchor point="BOTTOM">
+            <Offset x="1" y="10" />
+         </Anchor>
+      </Anchors>
+      <NormalFont style="GameFontNormal" />
+   </Button>
+
+   <Button inherits="UIPanelButtonTemplate" text="Test frame" parent="FrameTestFrame">
+      <Size x="70" y="30" />
+      <Scripts>
+         <OnClick function="testFrame" />
+      </Scripts>
+      <Anchors>
+         <Anchor point="LEFT">
+            <Offset x="240" y="1" />
+         </Anchor>
+         <Anchor point="BOTTOM">
+            <Offset x="1" y="10" />
+         </Anchor>
+      </Anchors>
+      <NormalFont style="GameFontNormal" />
+   </Button>
+
    <!-- scroll -->
    <Frame name="ScrollWrapper" parent="FrameTestFrame">
       <Size>
@@ -134,7 +166,7 @@
             <Layers>
                <Layer level="ARTWORK">
                   <Texture file="Interface\Icons\Spell_Shadow_DemonicFortitude">
-                     <Size x="100" y="100" />
+                     <Size x="30" y="30" />
                      <Anchors>
                         <Anchor point="CENTER" />
                      </Anchors>
@@ -148,75 +180,8 @@
                </Layer>
             </Layers>
 
-            <Frames>
-               <!-- ЭТОТ ФРЕЙМ можно сделать виртуальным, а в lua от него наследовать и просто изменять текст внутри -->
-               <Frame name="$parentChild" parentKey="child">
-                  <Size x="350" y="25" />
-                  <Anchors>
-                     <Anchor point="TOP">
-                        <Offset>
-                           <AbsDimension x="0" y="0" />
-                        </Offset>
-                     </Anchor>
-
-                     <Anchor point="LEFT">
-                        <Offset>
-                           <AbsDimension x="0" y="0" />
-                        </Offset>
-                     </Anchor>
-                  </Anchors>
-                  <Layers>
-                     <Layer level="BACKGROUND">
-                        <Texture setAllPoint="true">
-                           <Color r="0.5" g="0.5" b="0.5" a="0.3" />
-                        </Texture>
-                     </Layer>
-
-                     <Layer>
-                        <FontString name="$parentNameFontString" inherits="GameFontNormalSmall" text="Rayofsorrow" justifyH="LEFT" justifyV="TOP">
-                           <Anchors>
-                              <Anchor point="CENTER"/>
-                              <Anchor point="LEFT" relativeTo="$parent" x="0" y="0" />
-                           </Anchors>
-                        </FontString>
-
-                        <FontString name="$parentLevelFontString" inherits="GameFontNormalSmall" text="80" justifyH="LEFT" justifyV="TOP">
-                           <Anchors>
-                              <Anchor point="CENTER"/>
-                              <Anchor point="LEFT" relativeTo="$parent" x="80" y="0" />
-                           </Anchors>
-                        </FontString>
-
-                        <FontString name="$parentClassFontString" inherits="GameFontNormalSmall" text="Рыцарь смерти" justifyH="LEFT" justifyV="TOP">
-                           <Anchors>
-                              <Anchor point="CENTER"/>
-                              <Anchor point="LEFT" relativeTo="$parent" x="110" y="0" />
-                           </Anchors>
-                        </FontString>
-
-                        <FontString name="$parentGuildFontString" inherits="GameFontNormalSmall" text="Без гильдии" justifyH="LEFT" justifyV="TOP">
-                           <Anchors>
-                              <Anchor point="CENTER"/>
-                              <Anchor point="LEFT" relativeTo="$parent" x="200" y="0" />
-                           </Anchors>
-                        </FontString>
-                     </Layer>
-
-                  </Layers>
-
-                  <Frames>
-                     <Button inherits="UIPanelButtonTemplate" text="Invite" >
-                        <Size x="45" y="20"/>
-                        <Anchors>
-                           <Anchor point="CENTER"/>
-                           <Anchor point="RIGHT" x="-10" y="0"/>
-                        </Anchors>
-                        <NormalFont style="GameFontNormalSmall"/>
-                      </Button>
-                  </Frames>
-
-               </Frame>
-
+            <Frames name="SrollContainerFrames">
+               <!-- whos table content -->
             </Frames>
 
          </Frame>
@@ -266,24 +231,183 @@
          <Anchor point="CENTER" />
       </Anchors>
       <Layers>
-        <Layer>
-          <Texture>
-            <Size x="100" y="100" />
-            <Color a="0.5" r="1" g="1" b="1" />
-          </Texture>
-        </Layer>
+         <Layer>
+            <Texture>
+               <Size x="100" y="100" />
+               <Color a="0.5" r="1" g="1" b="1" />
+            </Texture>
+         </Layer>
       </Layers>
 
       <Frames>
-         <Button inherits="UIPanelButtonTemplate" text="Big Text" >
-            <Size x="150" y="60"/>
-            <Anchors><Anchor point="CENTER"/></Anchors>
-            <NormalFont style="GameFontNormalHuge"/>
-          </Button>
+         <Button inherits="UIPanelButtonTemplate" text="Big Text">
+            <Size x="150" y="60" />
+            <Anchors>
+               <Anchor point="CENTER" />
+            </Anchors>
+            <NormalFont style="GameFontNormalHuge" />
+         </Button>
       </Frames>
 
-    </Frame>
+   </Frame>
 
+   <!-- TEMPLATES -->
+   <!-- ЭТОТ ФРЕЙМ можно сделать виртуальным, а в lua от него наследовать и просто изменять текст внутри -->
+   <Frame name="PlayerRowTemplate" parentKey="child" virtual="true">
+      <Size x="350" y="25" />
+      <Anchors>
+         <Anchor point="TOP">
+            <Offset>
+               <AbsDimension x="0" y="0" />
+            </Offset>
+         </Anchor>
 
+         <Anchor point="LEFT">
+            <Offset>
+               <AbsDimension x="0" y="0" />
+            </Offset>
+         </Anchor>
+      </Anchors>
+      <Layers>
+         <Layer level="BACKGROUND">
+            <Texture setAllPoint="true">
+               <Color r="0.5" g="0.5" b="0.5" a="0.3" />
+            </Texture>
+         </Layer>
+
+         <Layer>
+            <FontString name="$parentNameFontString" inherits="GameFontNormalSmall" text="Rayofsorrow" justifyH="LEFT" justifyV="TOP">
+               <Anchors>
+                  <Anchor point="CENTER" />
+                  <Anchor point="LEFT" relativeTo="$parent" x="0" y="0" />
+               </Anchors>
+            </FontString>
+
+            <FontString name="$parentLevelFontString" inherits="GameFontNormalSmall" text="80" justifyH="LEFT" justifyV="TOP">
+               <Anchors>
+                  <Anchor point="CENTER" />
+                  <Anchor point="LEFT" relativeTo="$parent" x="80" y="0" />
+               </Anchors>
+            </FontString>
+
+            <FontString name="$parentClassFontString" inherits="GameFontNormalSmall" text="Рыцарь смерти" justifyH="LEFT" justifyV="TOP">
+               <Anchors>
+                  <Anchor point="CENTER" />
+                  <Anchor point="LEFT" relativeTo="$parent" x="110" y="0" />
+               </Anchors>
+            </FontString>
+
+            <FontString name="$parentGuildFontString" inherits="GameFontNormalSmall" text="Без гильдии" justifyH="LEFT" justifyV="TOP">
+               <Anchors>
+                  <Anchor point="CENTER" />
+                  <Anchor point="LEFT" relativeTo="$parent" x="200" y="0" />
+               </Anchors>
+            </FontString>
+         </Layer>
+
+      </Layers>
+
+      <Frames>
+         <Button inherits="UIPanelButtonTemplate" text="Invite">
+            <Size x="45" y="20" />
+            <Anchors>
+               <Anchor point="CENTER" />
+               <Anchor point="RIGHT" x="-10" y="0" />
+            </Anchors>
+            <NormalFont style="GameFontNormalSmall" />
+         </Button>
+      </Frames>
+
+   </Frame>
+
+   <Button name="MyButtonTemplate-1" text="BUTTON TEMPLATE" virtual="true">
+      <Size x="16" y="16" />
+      <Anchors>
+         <Anchor point="CENTER" />
+      </Anchors>
+      <Layers>
+         <Layer level="BACKGROUND">
+            <Texture name="$parentIcon" parentKey="icon">
+               <Color r="1.0" g="1.0" b="1.0" />
+            </Texture>
+         </Layer>
+      </Layers>
+   </Button>
+
+   <Button name="MyButtonTemplate-2" text="BUTTON TEMPLATE" virtual="true">
+      <Size x="16" y="16" />
+      <Anchors>
+         <Anchor point="CENTER" />
+      </Anchors>
+      <Layers>
+         <Layer level="BACKGROUND">
+            <Texture name="$parentIcon" parentKey="icon">
+               <Color r="1.0" g="1.0" b="1.0" />
+            </Texture>
+         </Layer>
+      </Layers>
+   </Button>
+
+   <Frame name="ToggleTemplate" virtual="true">
+      <Size x="10" y="50" />
+      <Anchors>
+         <Anchor point="TOPLEFT" />
+      </Anchors>
+      <Frames>
+         <Button inherits="UIPanelButtonTemplate" text="toggle frame">
+            <Size x="80" y="22" />
+            <Scripts>
+               <OnClick function="ToggleSetting"></OnClick>
+            </Scripts>
+            <Anchors>
+               <Anchor point="LEFT" />
+            </Anchors>
+            <NormalFont style="GameFontNormal" />
+         </Button>
+      </Frames>
+   </Frame>
+
+   <Button name="BagBuddyItemTemplate" virtual="true">
+      <Size>
+         <AbsDimension x="37" y="37" />
+      </Size>
+      <Layers>
+         <Layer level="BORDER">
+            <Texture name="$parentIconTexture" parentKey="icon" />
+            <FontString name="$parentCount" parentKey="count" inherits="NumberFontNormal" justifyH="RIGHT" hidden="true">
+               <Anchors>
+                  <Anchor point="BOTTOMRIGHT">
+                     <Offset>
+                        <AbsDimension x="-5" y="2" />
+                     </Offset>
+                  </Anchor>
+               </Anchors>
+            </FontString>
+         </Layer>
+         <Layer level="OVERLAY">
+            <Texture name="$parentGlow" parentKey="glow" alphaMode="ADD" file="Interface\Buttons\UI-ActionButton-Border">
+               <Size x="70" y="70" />
+               <Anchors>
+                  <Anchor point="CENTER" />
+               </Anchors>
+               <Color r="1.0" g="1.0" b="1.0" a="0.6" />
+            </Texture>
+         </Layer>
+      </Layers>
+      <NormalTexture name="$parentNormalTexture" file="Interface\Buttons\UI-iQuickslot2">
+         <Size>
+            <AbsDimension x="64" y="64" />
+         </Size>
+         <Anchors>
+            <Anchor point="CENTER">
+               <Offset>
+                  <AbsDimension x="0" y="-1" />
+               </Offset>
+            </Anchor>
+         </Anchors>
+      </NormalTexture>
+      <PushedTexture file="Interface\Buttons\UI-Quickslot-Depress" />
+      <HighlightTexture file="Interface\Buttons\ButtonHilight-Square" alphaMode="ADD" />
+   </Button>
 
 </Ui>
