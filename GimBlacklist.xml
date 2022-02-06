@@ -1,0 +1,151 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\FrameXML\UI.xsd">
+   <Script file = "Gim.lua" />
+
+   <!-- blacklist frame -->
+   <Frame name="BlacklistFrame" enableMouse="true" movable="true" hidden="true" frameStrata="DIALOG" frameLevel="10">
+      <Scripts>
+         <OnLoad>self:RegisterForDrag("LeftButton");</OnLoad>
+         <OnDragStart>self:StartMoving();</OnDragStart>
+         <OnDragStop>self:StopMovingOrSizing();</OnDragStop>
+      </Scripts>
+      <Size>
+         <AbsDimension x="400" y="250" />
+      </Size>
+      <Anchors>
+         <Anchor point="CENTER" />
+      </Anchors>
+      <Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background" edgeFile="Interface\DialogFrame\UI-DialogBox-Border" tile="true">
+         <BackgroundInsets>
+            <AbsInset left="11" right="12" top="12" bottom="11" />
+         </BackgroundInsets>
+         <TileSize>
+            <AbsValue val="32" />
+         </TileSize>
+         <EdgeSize>
+            <AbsValue val="32" />
+         </EdgeSize>
+      </Backdrop>
+      <Layers>
+         <Layer level="BACKGROUND">
+            <Texture setAllPoints="true">
+               <Color r="0.4" g="0.4" b="0.4" a="0.3" />
+            </Texture>
+         </Layer>
+
+         <Layer>
+            <FontString name="$parentSettingTitle" inherits="GameFontHighlight" text="Blacklist (already invited)" justifyH="LEFT" justifyV="TOP">
+               <Anchors>
+                  <Anchor point="TOP" x="0" y="-12" />
+                  <Anchor point="LEFTCENTER" relativeTo="$parent" x="0" y="0" />
+               </Anchors>
+            </FontString>
+         </Layer>
+      </Layers>
+
+      <Frames>
+         <Frame name="TextScrollWrapper">
+            <Size>
+               <AbsDimension x="350" y="180" />
+            </Size>
+            <Anchors>
+               <Anchor point="TOP">
+                  <Offset x="0" y="-45" />
+               </Anchor>
+               <Anchor point="LEFT">
+                  <Offset x="15" y="0" />
+               </Anchor>
+            </Anchors>
+            <Frames>
+               <ScrollFrame name="TextMySrollFrame" inherits="UIPanelScrollFrameTemplate" virtual="false">
+                  <Anchors>
+                     <Anchor point="TOP">
+                        <Offset>
+                           <AbsDimension x="0" y="0" />
+                        </Offset>
+                     </Anchor>
+                     <Anchor point="LEFT">
+                        <Offset>
+                           <AbsDimension x="0" y="0" />
+                        </Offset>
+                     </Anchor>
+                  </Anchors>
+            
+                  <Layers>
+                     <Layer level="BACKGROUND">
+                        <Texture setAllPoint="true">
+                           <Color r="0.5" g="0.5" b="0.5" a="0.3" />
+                        </Texture>
+                     </Layer>
+                  </Layers>
+            
+                  <ScrollChild>
+                     <Frame name="TextScrollContainer">
+                        <Size x="70" y="250" />
+                        <Layers>
+                           
+                           <!--
+                           <Layer level="ARTWORK">
+                              <Texture file="Interface\Icons\Spell_Shadow_DemonicFortitude">
+                                 <Size x="30" y="30" />
+                                 <Anchors>
+                                    <Anchor point="CENTER" />
+                                 </Anchors>
+                              </Texture>
+                           </Layer>
+            
+                           <Layer level="BACKGROUND">
+                              <Texture setAllPoint="true">
+                                 <Color r="0.5" g="0.1" b="0.1" a="0.3" />
+                              </Texture>
+                           </Layer>-->
+
+                        </Layers>
+            
+                        <Frames name="TextSrollContainerFrames">
+                           <!-- text scroll container content -->
+                        </Frames>
+            
+                     </Frame>
+                  </ScrollChild>
+            
+               </ScrollFrame>
+            </Frames>
+         </Frame>
+
+         <EditBox name="TestEditBox" multiLine="true" newLineEnabled="true" parent="TextScrollContainer">
+            <Size x="350" y="100" />
+            <Anchors>
+               <Anchor point="TOP" x="0" y="0" />
+               <Anchor point="LEFT" x="0" y="0" />
+            </Anchors>
+            <Dimensions x="400" y="90" />
+            <FontString inherits="GameFontNormal" />
+            <Layers>
+               <Layer level="BACKGROUND">
+                  <Texture setAllPoints="true">
+                     <Color r="0.4" g="0.4" b="0.4" a="0.3" />
+                  </Texture>
+               </Layer>
+            </Layers>
+         </EditBox>
+
+         <Button inherits="UIPanelCloseButton">
+            <Size x="30" y="30" />
+            <Scripts>
+               <OnClick function="blacklistToggle" />
+            </Scripts>
+            <Anchors>
+               <Anchor point="TOP">
+                  <Offset x="0" y="-5" />
+               </Anchor>
+               <Anchor point="RIGHT">
+                  <Offset x="-5" y="0" />
+               </Anchor>
+            </Anchors>
+            <NormalFont style="GameFontNormal" />
+         </Button>
+      </Frames>
+
+   </Frame>
+
+</Ui>

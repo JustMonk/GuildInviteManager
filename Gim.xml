@@ -33,7 +33,7 @@
             <FontString name="$parentSettingTitle" inherits="GameFontHighlight" text="Guild invite manager (0.2)" justifyH="LEFT" justifyV="TOP">
                <Anchors>
                   <Anchor point="TOP" x="0" y="-12" />
-                  <Anchor point="LEFTCENTER" relativeTo="$parent" x="0" y="0" />
+                  <Anchor point="CENTER" relativeTo="$parent" x="0" y="0" />
                </Anchors>
             </FontString>
          </Layer>
@@ -148,6 +148,66 @@
       </Anchors>
       <NormalFont style="GameFontNormal" />
    </Button>
+
+   <Button inherits="UIPanelButtonTemplate" text="blacklist" parent="FrameTestFrame">
+      <Size x="70" y="30" />
+      <Scripts>
+         <OnClick function="blacklistToggle" />
+      </Scripts>
+      <Anchors>
+         <Anchor point="LEFT">
+            <Offset x="15" y="1" />
+         </Anchor>
+         <Anchor point="BOTTOM">
+            <Offset x="1" y="40" />
+         </Anchor>
+      </Anchors>
+      <NormalFont style="GameFontNormal" />
+   </Button>
+
+   <!-- stats containter -->
+   <Frame name="StatsBlock" parentKey="child" parent="FrameTestFrame">
+      <Size x="150" y="125" />
+      <Anchors>
+         <Anchor point="LEFT">
+            <Offset x="15" y="0" />
+         </Anchor>
+
+         <Anchor point="TOP">
+            <Offset x="0" y="-250" />
+         </Anchor>
+      </Anchors>
+      <Backdrop edgeFile="Interface\BUTTONS\UI-SliderBar-Border" tile="true">
+         <BackgroundInsets>
+            <AbsInset left="11" right="12" top="12" bottom="11" />
+         </BackgroundInsets>
+         <TileSize>
+            <AbsValue val="10" />
+         </TileSize>
+         <EdgeSize>
+            <AbsValue val="10" />
+         </EdgeSize>
+      </Backdrop>
+      <Layers>
+         <Layer level="BACKGROUND">
+            <Texture setAllPoint="true">
+               <Color r="0.5" g="0.5" b="0.5" a="0.3" />
+            </Texture>
+         </Layer>
+
+         <Layer>
+            <FontString name="$parentNameFontString" inherits="GameFontWhiteSmall" text="Statistics">
+               <Anchors>
+                  <Anchor point="TOP" x="0" y="-10" />
+                  <Anchor point="CENTER" relativeTo="$parent" x="0" y="0" />
+               </Anchors>
+            </FontString>
+         </Layer>
+
+      </Layers>
+
+   </Frame>
+
 
    <!-- scroll -->
    <Frame name="ScrollWrapper" parent="FrameTestFrame">
@@ -442,5 +502,7 @@
       <PushedTexture file="Interface\Buttons\UI-Quickslot-Depress" />
       <HighlightTexture file="Interface\Buttons\ButtonHilight-Square" alphaMode="ADD" />
    </Button>
+
+   <!-- blacklist frame -->
 
 </Ui>
