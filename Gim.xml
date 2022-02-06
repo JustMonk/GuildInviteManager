@@ -28,6 +28,15 @@
                <Color r="0.4" g="0.4" b="0.4" a="0.3" />
             </Texture>
          </Layer>
+
+         <Layer>
+            <FontString name="$parentSettingTitle" inherits="GameFontHighlight" text="Guild invite manager (0.2)" justifyH="LEFT" justifyV="TOP">
+               <Anchors>
+                  <Anchor point="TOP" x="0" y="-12" />
+                  <Anchor point="LEFTCENTER" relativeTo="$parent" x="0" y="0" />
+               </Anchors>
+            </FontString>
+         </Layer>
       </Layers>
    </Frame>
 
@@ -38,6 +47,23 @@
       </Scripts>
       <Anchors>
          <Anchor point="TOP" />
+      </Anchors>
+      <NormalFont style="GameFontNormal" />
+   </Button>
+
+   <!-- top controls -->
+   <Button inherits="UIPanelCloseButton" parent="FrameTestFrame">
+      <Size x="30" y="30" />
+      <Scripts>
+         <OnClick function="ToggleSetting" />
+      </Scripts>
+      <Anchors>
+         <Anchor point="TOP">
+            <Offset x="0" y="-5" />
+         </Anchor>
+         <Anchor point="RIGHT">
+            <Offset x="-5" y="0" />
+         </Anchor>
       </Anchors>
       <NormalFont style="GameFontNormal" />
    </Button>
@@ -107,14 +133,30 @@
       <NormalFont style="GameFontNormal" />
    </Button>
 
+   <Button inherits="UIPanelButtonTemplate" text="Datagrid upd" parent="FrameTestFrame">
+      <Size x="70" y="30" />
+      <Scripts>
+         <OnClick function="updateDatagrid" />
+      </Scripts>
+      <Anchors>
+         <Anchor point="LEFT">
+            <Offset x="315" y="1" />
+         </Anchor>
+         <Anchor point="BOTTOM">
+            <Offset x="1" y="10" />
+         </Anchor>
+      </Anchors>
+      <NormalFont style="GameFontNormal" />
+   </Button>
+
    <!-- scroll -->
    <Frame name="ScrollWrapper" parent="FrameTestFrame">
       <Size>
-         <AbsDimension x="320" y="200" />
+         <AbsDimension x="350" y="200" />
       </Size>
       <Anchors>
          <Anchor point="TOP">
-            <Offset x="0" y="-10" />
+            <Offset x="0" y="-45" />
          </Anchor>
          <Anchor point="LEFT">
             <Offset x="15" y="0" />
@@ -129,25 +171,16 @@
       </Layers>-->
    </Frame>
 
-   <ScrollFrame name="ScrollTable" inherits="UIPanelScrollFrameTemplate">
-      <Anchors>
-         <Anchor point="TOPLEFT">
-            <Offset x="0" y="-10" />
-         </Anchor>
-      </Anchors>
-   </ScrollFrame>
-
-
    <ScrollFrame name="MySrollFrame" parent="ScrollWrapper" inherits="UIPanelScrollFrameTemplate" virtual="false">
       <Anchors>
-         <Anchor point="TOPLEFT">
+         <Anchor point="TOP">
             <Offset>
-               <AbsDimension x="1" y="-8" />
+               <AbsDimension x="0" y="0" />
             </Offset>
          </Anchor>
-         <Anchor point="BOTTOMRIGHT">
+         <Anchor point="LEFT">
             <Offset>
-               <AbsDimension x="30" y="8" />
+               <AbsDimension x="0" y="0" />
             </Offset>
          </Anchor>
       </Anchors>

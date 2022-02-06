@@ -16,7 +16,11 @@ local function UpdateCoordinates(self, elapsed)
 end
 
 -- ================== CURRENT SETTINGS =======================
+
+-- GLOBAL SCOPE
 CurrentWhoResults = 0;
+PlayerRows = {};
+-- GLOBAL SCOPE END
 
 function Addon_OnLoad(self, event, ...)
     self:SetScript("OnEvent", Addon_OnEvent);
@@ -45,8 +49,8 @@ function Addon_OnEvent(self, event, ...)
         print('PLAYER_LOGIN EVENT');
         createPlayerTable();
     elseif event == "WHO_LIST_UPDATE" then
-        print("Gim: WHO_LIST_UPDATE EVENT FIRED");
         numResults, totalCount = GetNumWhoResults();
+        print("Gim: WHO_LIST_UPDATE EVENT FIRED. numResults: ", numResults, ", totalCount: ", totalCount);
         CurrentWhoResults = numResults;
     end
 end
@@ -92,13 +96,20 @@ function printSlashCommand()
     ChatEdit_SendText(DEFAULT_CHAT_FRAME.editBox, 0);
 end
 
+function ginvite(name)
+    print('ginvite ', name);
+    local command = "/ginvite " .. name;
+    DEFAULT_CHAT_FRAME.editBox:SetText(command);
+    ChatEdit_SendText(DEFAULT_CHAT_FRAME.editBox, 0);
+end
+
 function updateWho()
     print('updateWho init');
     SendWho("80-80");
 end
 
 -- INIT FUNCTIONs
-function createPlayerRow(name, parent)
+function createPlayerRow(name, parent, playername)
     print(">>> CREATE PLAYER ROW INIT <<<")
 
     local f = CreateFrame("Frame", name, parent);
@@ -108,26 +119,48 @@ function createPlayerRow(name, parent)
 
     print('frame created');
 
-    local b = CreateFrame("Button", "$parentButton", f, "UIPanelButtonTemplate");
-    b:SetText("Invite");
-    b:SetSize(45, 20);
-    b:SetPoint("CENTER")
-    b:SetPoint("RIGHT", -10, 0);
+    f.invButton = CreateFrame("Button", "$parentButton", f, "UIPanelButtonTemplate");
+    f.invButton:SetText("Invite");
+    f.invButton:SetSize(45, 20);
+    f.invButton:SetPoint("CENTER")
+    f.invButton:SetPoint("RIGHT", -10, 0);
     -- b:SetFontObject("GameFontNormalSmall")
     print('button created');
 
+    f.username = f:CreateFontString("$parentUsername", "OVERLAY", "GameFontNormalSmall");
+    f.username:SetText(playername)
+    f.username:SetPoint("CENTER", f)
+    f.username:SetPoint("LEFT", f, 5, 0)
+
+    f.level = f:CreateFontString("$parentLevel", "OVERLAY", "GameFontNormalSmall");
+    f.level:SetText("80")
+    f.level:SetPoint("CENTER", f)
+    f.level:SetPoint("LEFT", f, 90, 0)
+
+    f.class = f:CreateFontString("$parentClass", "OVERLAY", "GameFontNormalSmall");
+    f.class:SetText("Рыцарь смерти")
+    f.class:SetPoint("CENTER", f)
+    f.class:SetPoint("LEFT", f, 110, 0)
+
+    f.guild = f:CreateFontString("$parentClass", "OVERLAY", "GameFontNormalSmall");
+    f.guild:SetText("Без гильдии ")
+    f.guild:SetPoint("CENTER", f)
+    f.guild:SetPoint("LEFT", f, 200, 0)
+
     -- рабочий сниппет для FontString
-    local AddonFS = f:CreateFontString("FontString", "OVERLAY", "GameFontNormalSmall")
-    AddonFS:SetText("Testtext")
+    -- local AddonFS = f:CreateFontString("$parentUsername", "OVERLAY", "GameFontNormalSmall")
+    -- AddonFS:SetText("Testtext")
     -- AddonFS:SetPoint("CENTER",f,"LEFT",0,0) --обязательно должен быть родитель и позиция
-    AddonFS:SetPoint("CENTER", f)
-    AddonFS:SetPoint("LEFT", f, 0, 0)
+    -- AddonFS:SetPoint("CENTER", f)
+    -- AddonFS:SetPoint("LEFT", f, 0, 0)
     print('fontString created');
 
     f.texture = f:CreateTexture();
     f.texture:SetAllPoints(f);
     f.texture:SetTexture(0.5, 0.5, 0.5, 0.3);
     print('texture created');
+
+    return f;
 
     -- f.mytext = f.CreateFontString();
 
@@ -166,26 +199,46 @@ function createPlayerRow(name, parent)
 
 end
 
+-- вызывается один раз для создания фреймов в таблице
 function createPlayerTable()
     print('CreatePlayerTable')
-    createPlayerRow('test2', ScrollContainer)
+    ScrollContainer:SetHeight(1250)
 
     for i = 1, 50 do
-        local f1 = CreateFrame("Frame", nil, FrameTestFrame)
-        f1:SetWidth(1)
-        f1:SetHeight(1)
-        f1:SetAlpha(.90);
-        f1:SetPoint("CENTER", 1, 1)
+        -- +25 y offset
+        local row = createPlayerRow('row' .. i, ScrollContainer, 'Restmoon' .. i, i);
+        print(row);
 
-        f1.text = f1:CreateFontString(nil, "ARTWORK")
-        f1.text:SetFont("Fonts\\ARIALN.ttf", 13, "OUTLINE")
-
-        f1.text:SetPoint("CENTER")
-        f1.text:SetPoint("LEFT", f1, "LEFT", 0 + i, 0)
-        f1.text:SetText("SDJAKDJSKAJDKASKD")
-
-        ShowUIPanel(f1)
+        row:SetPoint("TOP", 0, (i - 1) * -25);
+        PlayerRows[i] = row;
     end
+
+end
+
+function updateDatagrid()
+    print('CurrentWhoResults: ', CurrentWhoResults);
+    ScrollContainer:SetHeight(CurrentWhoResults * 25);
+
+    for i = 1, CurrentWhoResults do
+        local name, guild, level, race, class, zone, classFileName, sex = GetWhoInfo(i);
+        local currentRow = PlayerRows[i];
+
+        currentRow.username:SetText(name);
+        currentRow.level:SetText(level);
+        currentRow.class:SetText(class);
+        currentRow.guild:SetText(string.sub(guild, 1, 17));
+
+        currentRow.invButton:SetScript("OnClick", function()
+            ginvite(name)
+        end);
+    end
+
+    for i = numResults + 1, 50 do
+        PlayerRows[i]:Hide();
+    end
+
+    print('datagrid update ended');
+    -- test
 
 end
 
