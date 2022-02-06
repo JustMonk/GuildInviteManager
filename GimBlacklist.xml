@@ -1,5 +1,5 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\FrameXML\UI.xsd">
-   <Script file = "Gim.lua" />
+   <Script file="Gim.lua" />
 
    <!-- blacklist frame -->
    <Frame name="BlacklistFrame" enableMouse="true" movable="true" hidden="true" frameStrata="DIALOG" frameLevel="10">
@@ -69,7 +69,7 @@
                         </Offset>
                      </Anchor>
                   </Anchors>
-            
+
                   <Layers>
                      <Layer level="BACKGROUND">
                         <Texture setAllPoint="true">
@@ -77,12 +77,12 @@
                         </Texture>
                      </Layer>
                   </Layers>
-            
+
                   <ScrollChild>
                      <Frame name="TextScrollContainer">
                         <Size x="70" y="250" />
                         <Layers>
-                           
+
                            <!--
                            <Layer level="ARTWORK">
                               <Texture file="Interface\Icons\Spell_Shadow_DemonicFortitude">
@@ -100,14 +100,14 @@
                            </Layer>-->
 
                         </Layers>
-            
+
                         <Frames name="TextSrollContainerFrames">
                            <!-- text scroll container content -->
                         </Frames>
-            
+
                      </Frame>
                   </ScrollChild>
-            
+
                </ScrollFrame>
             </Frames>
          </Frame>

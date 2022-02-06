@@ -170,7 +170,7 @@ function drawStatistics()
     local keys = get_keys(PlayerBlacklist);
     local blacklistCount = table.getn(keys);
 
-    --StatsBlockUsername:SetText('sdakjdsakdasd') //можно еще по имени обращаться
+    -- StatsBlockUsername:SetText('sdakjdsakdasd') //можно еще по имени обращаться
     f.blacklist:SetText("Blacklist: " .. blacklistCount)
     f.invitesCount:SetText("Invited: " .. blacklistCount)
 
@@ -280,21 +280,44 @@ function updateDatagrid()
     print('CurrentWhoResults: ', CurrentWhoResults);
     ScrollContainer:SetHeight(CurrentWhoResults * 25);
 
+    local filteredList = {};
+    local dummy = 0;
     for i = 1, CurrentWhoResults do
         local name, guild, level, race, class, zone, classFileName, sex = GetWhoInfo(i);
-        local currentRow = PlayerRows[i];
+        if PlayerBlacklist[name] then
+            print('player ' .. name .. ' in blacklist');
+            dummy = 0;
+        else
+            local rowIndex = table.getn(filteredList) + 1;
+            filteredList[rowIndex] = name;
+            local currentRow = PlayerRows[rowIndex];
+            currentRow.username:SetText(name);
+            currentRow.level:SetText(level);
+            currentRow.class:SetText(class);
+            currentRow.guild:SetText(string.sub(guild, 1, 17));
 
-        currentRow.username:SetText(name);
-        currentRow.level:SetText(level);
-        currentRow.class:SetText(class);
-        currentRow.guild:SetText(string.sub(guild, 1, 17));
-
-        currentRow.invButton:SetScript("OnClick", function()
-            ginvite(name)
-        end);
+            currentRow.invButton:SetScript("OnClick", function()
+                ginvite(name)
+                updateDatagrid();
+            end);
+        end
     end
 
-    for i = numResults + 1, 50 do
+    -- for i = 1, CurrentWhoResults do
+    -- local name, guild, level, race, class, zone, classFileName, sex = GetWhoInfo(i);
+    -- local currentRow = PlayerRows[i];
+
+    -- currentRow.username:SetText(name);
+    -- currentRow.level:SetText(level);
+    -- currentRow.class:SetText(class);
+    -- currentRow.guild:SetText(string.sub(guild, 1, 17));
+
+    -- currentRow.invButton:SetScript("OnClick", function()
+    --    ginvite(name)
+    -- end);
+    -- end
+
+    for i = table.getn(filteredList) + 1, 50 do
         PlayerRows[i]:Hide();
     end
 
@@ -330,6 +353,11 @@ function blacklistToggle()
     else
         ShowUIPanel(BlacklistFrame)
     end
+end
+
+function clearBlacklist()
+    print('clear blacklist init');
+    PlayerBlacklist = {};
 end
 
 function old_scroll_load_function()

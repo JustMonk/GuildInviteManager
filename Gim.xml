@@ -165,6 +165,22 @@
       <NormalFont style="GameFontNormal" />
    </Button>
 
+   <Button inherits="UIPanelButtonTemplate" text="clr blacklist" parent="FrameTestFrame">
+      <Size x="70" y="30" />
+      <Scripts>
+         <OnClick function="clearBlacklist" />
+      </Scripts>
+      <Anchors>
+         <Anchor point="LEFT">
+            <Offset x="90" y="1" />
+         </Anchor>
+         <Anchor point="BOTTOM">
+            <Offset x="1" y="40" />
+         </Anchor>
+      </Anchors>
+      <NormalFont style="GameFontNormal" />
+   </Button>
+
    <!-- stats containter -->
    <Frame name="StatsBlock" parentKey="child" parent="FrameTestFrame">
       <Size x="150" y="125" />
