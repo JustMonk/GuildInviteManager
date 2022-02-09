@@ -6,7 +6,7 @@
          <OnDragStop>self:StopMovingOrSizing();</OnDragStop>
       </Scripts>
       <Size>
-         <AbsDimension x="400" y="450" />
+         <AbsDimension x="400" y="480" />
       </Size>
       <Anchors>
          <Anchor point="CENTER" />
@@ -30,7 +30,7 @@
          </Layer>
 
          <Layer>
-            <FontString name="$parentSettingTitle" inherits="GameFontHighlight" text="Guild invite manager (0.2)" justifyH="LEFT" justifyV="TOP">
+            <FontString name="$parentSettingTitle" inherits="GameFontHighlight" text="Guild invite manager (0.3)" justifyH="LEFT" justifyV="TOP">
                <Anchors>
                   <Anchor point="TOP" x="0" y="-12" />
                   <Anchor point="CENTER" relativeTo="$parent" x="0" y="0" />
@@ -69,10 +69,10 @@
    </Button>
 
    <!-- bottom controls -->
-   <Button inherits="UIPanelButtonTemplate" text="Print" parent="FrameTestFrame">
+   <Button inherits="UIPanelButtonTemplate" text="Scan" parent="FrameTestFrame">
       <Size x="70" y="30" />
       <Scripts>
-         <OnClick function="printSlashCommand" />
+         <OnClick function="updateWho" />
       </Scripts>
       <Anchors>
          <Anchor point="LEFT">
@@ -93,38 +93,6 @@
       <Anchors>
          <Anchor point="LEFT">
             <Offset x="90" y="1" />
-         </Anchor>
-         <Anchor point="BOTTOM">
-            <Offset x="1" y="10" />
-         </Anchor>
-      </Anchors>
-      <NormalFont style="GameFontNormal" />
-   </Button>
-
-   <Button inherits="UIPanelButtonTemplate" text="Create table" parent="FrameTestFrame">
-      <Size x="70" y="30" />
-      <Scripts>
-         <OnClick function="createPlayerTable" />
-      </Scripts>
-      <Anchors>
-         <Anchor point="LEFT">
-            <Offset x="165" y="1" />
-         </Anchor>
-         <Anchor point="BOTTOM">
-            <Offset x="1" y="10" />
-         </Anchor>
-      </Anchors>
-      <NormalFont style="GameFontNormal" />
-   </Button>
-
-   <Button inherits="UIPanelButtonTemplate" text="Test frame" parent="FrameTestFrame">
-      <Size x="70" y="30" />
-      <Scripts>
-         <OnClick function="testFrame" />
-      </Scripts>
-      <Anchors>
-         <Anchor point="LEFT">
-            <Offset x="240" y="1" />
          </Anchor>
          <Anchor point="BOTTOM">
             <Offset x="1" y="10" />
@@ -183,14 +151,14 @@
 
    <!-- stats containter -->
    <Frame name="StatsBlock" parentKey="child" parent="FrameTestFrame">
-      <Size x="150" y="125" />
+      <Size x="185" y="125" />
       <Anchors>
          <Anchor point="LEFT">
             <Offset x="15" y="0" />
          </Anchor>
 
          <Anchor point="TOP">
-            <Offset x="0" y="-250" />
+            <Offset x="0" y="-280" />
          </Anchor>
       </Anchors>
       <Backdrop edgeFile="Interface\BUTTONS\UI-SliderBar-Border" tile="true">
@@ -224,6 +192,91 @@
 
    </Frame>
 
+   <!-- settings view containter -->
+   <Frame name="SettingsBlock" parentKey="child" parent="FrameTestFrame">
+      <Size x="185" y="125" />
+      <Anchors>
+         <Anchor point="LEFT">
+            <Offset x="200" y="0" />
+         </Anchor>
+
+         <Anchor point="TOP">
+            <Offset x="0" y="-280" />
+         </Anchor>
+      </Anchors>
+      <Backdrop edgeFile="Interface\BUTTONS\UI-SliderBar-Border" tile="true">
+         <BackgroundInsets>
+            <AbsInset left="11" right="12" top="12" bottom="11" />
+         </BackgroundInsets>
+         <TileSize>
+            <AbsValue val="10" />
+         </TileSize>
+         <EdgeSize>
+            <AbsValue val="10" />
+         </EdgeSize>
+      </Backdrop>
+      <Layers>
+         <Layer level="BACKGROUND">
+            <Texture setAllPoint="true">
+               <Color r="0.5" g="0.5" b="0.5" a="0.3" />
+            </Texture>
+         </Layer>
+
+         <Layer>
+            <FontString name="$parentNameFontString" inherits="GameFontWhiteSmall" text="Settings">
+               <Anchors>
+                  <Anchor point="TOP" x="0" y="-10" />
+                  <Anchor point="CENTER" relativeTo="$parent" x="0" y="0" />
+               </Anchors>
+            </FontString>
+
+            <!-- delay -->
+            <FontString inherits="GameFontWhiteSmall" text="Query delay (sec):" justifyH="LEFT" justifyV="TOP">
+               <Anchors>
+                  <Anchor point="TOP" x="0" y="-30" />
+                  <Anchor point="LEFT" relativeTo="$parent" x="5" y="0" />
+               </Anchors>
+            </FontString>
+            <FontString name="$parentTest1" inherits="GameFontNormalSmall" text="0" justifyH="LEFT" justifyV="TOP">
+               <Anchors>
+                  <Anchor point="TOP" x="0" y="-30" />
+                  <Anchor point="LEFT" relativeTo="$parent" x="105" y="0" />
+               </Anchors>
+            </FontString>
+
+            <!-- whisper flag -->
+            <FontString inherits="GameFontWhiteSmall" text="Use whisper:" justifyH="LEFT" justifyV="TOP">
+               <Anchors>
+                  <Anchor point="TOP" x="0" y="-45" />
+                  <Anchor point="LEFT" relativeTo="$parent" x="5" y="0" />
+               </Anchors>
+            </FontString>
+            <FontString name="$parentTest2" inherits="GameFontNormalSmall" text="false" justifyH="LEFT" justifyV="TOP">
+               <Anchors>
+                  <Anchor point="TOP" x="0" y="-45" />
+                  <Anchor point="LEFT" relativeTo="$parent" x="75" y="0" />
+               </Anchors>
+            </FontString>
+
+            <!-- /w message -->
+            <FontString inherits="GameFontWhiteSmall" text="/w message:" justifyH="LEFT" justifyV="TOP">
+               <Anchors>
+                  <Anchor point="TOP" x="0" y="-60" />
+                  <Anchor point="LEFT" relativeTo="$parent" x="5" y="0" />
+               </Anchors>
+            </FontString>
+            <FontString name="$parentTest3" inherits="GameFontNormalSmall" text="Just test message..." justifyH="LEFT" justifyV="TOP">
+               <Anchors>
+                  <Anchor point="TOP" x="0" y="-60" />
+                  <Anchor point="LEFT" relativeTo="$parent" x="70" y="0" />
+               </Anchors>
+            </FontString>
+         </Layer>
+
+      </Layers>
+
+   </Frame>
+
 
    <!-- scroll -->
    <Frame name="ScrollWrapper" parent="FrameTestFrame">
@@ -245,6 +298,51 @@
             </Texture>
          </Layer>
       </Layers>-->
+      <Layers>
+         <Layer>
+            <!-- total count -->
+            <FontString inherits="GameFontWhiteSmall" text="Total count:" justifyH="LEFT" justifyV="TOP">
+               <Anchors>
+                  <Anchor point="BOTTOM" x="0" y="-20" />
+                  <Anchor point="LEFT" relativeTo="$parent" x="0" y="0" />
+               </Anchors>
+            </FontString>
+            <FontString name="TotalCount" inherits="GameFontNormalSmall" text="0" justifyH="LEFT" justifyV="TOP">
+               <Anchors>
+                  <Anchor point="BOTTOM" x="0" y="-20" />
+                  <Anchor point="LEFT" relativeTo="$parent" x="65" y="0" />
+               </Anchors>
+            </FontString>
+
+            <!-- num results -->
+            <FontString inherits="GameFontWhiteSmall" text="Num results:" justifyH="LEFT" justifyV="TOP">
+               <Anchors>
+                  <Anchor point="BOTTOM" x="0" y="-20" />
+                  <Anchor point="LEFT" relativeTo="$parent" x="115" y="0" />
+               </Anchors>
+            </FontString>
+            <FontString name="NumResultsCount" inherits="GameFontNormalSmall" text="0" justifyH="LEFT" justifyV="TOP">
+               <Anchors>
+                  <Anchor point="BOTTOM" x="0" y="-20" />
+                  <Anchor point="LEFT" relativeTo="$parent" x="185" y="0" />
+               </Anchors>
+            </FontString>
+
+            <!-- num results -->
+            <FontString inherits="GameFontWhiteSmall" text="In table:" justifyH="LEFT" justifyV="TOP">
+               <Anchors>
+                  <Anchor point="BOTTOM" x="0" y="-20" />
+                  <Anchor point="LEFT" relativeTo="$parent" x="235" y="0" />
+               </Anchors>
+            </FontString>
+            <FontString name="InTableCount" inherits="GameFontNormalSmall" text="0" justifyH="LEFT" justifyV="TOP">
+               <Anchors>
+                  <Anchor point="BOTTOM" x="0" y="-20" />
+                  <Anchor point="LEFT" relativeTo="$parent" x="285" y="0" />
+               </Anchors>
+            </FontString>
+         </Layer>
+      </Layers>
    </Frame>
 
    <ScrollFrame name="MySrollFrame" parent="ScrollWrapper" inherits="UIPanelScrollFrameTemplate" virtual="false">
@@ -518,7 +616,5 @@
       <PushedTexture file="Interface\Buttons\UI-Quickslot-Depress" />
       <HighlightTexture file="Interface\Buttons\ButtonHilight-Square" alphaMode="ADD" />
    </Button>
-
-   <!-- blacklist frame -->
 
 </Ui>

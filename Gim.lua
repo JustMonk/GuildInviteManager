@@ -19,6 +19,7 @@ end
 
 -- GLOBAL SCOPE
 CurrentWhoResults = 0;
+TotalWhoResults = 0;
 PlayerRows = {};
 -- GLOBAL SCOPE END
 
@@ -53,6 +54,10 @@ function Addon_OnEvent(self, event, ...)
         numResults, totalCount = GetNumWhoResults();
         print("Gim: WHO_LIST_UPDATE EVENT FIRED. numResults: ", numResults, ", totalCount: ", totalCount);
         CurrentWhoResults = numResults;
+        TotalWhoResults = totalCount;
+        -- update ui state --
+        updateTableCounters();
+        updateDatagrid();
     elseif event == "VARIABLES_LOADED" then
         -- все сохраненные переменные загружены
         print('variables has been loaded');
@@ -84,29 +89,6 @@ function ToggleSetting()
     end
 end
 
-function scrollCreateFromVideo()
-    local myScrollFrame = CreateFrame("ScrollFrame", nil, ScrollWrapper, "UIPanelScrollFrameTemplate");
-    myScrollFrame:SetPoint("TOPLEFT", ScrollWrapper, "TOPLEFT", 4, -8);
-    myScrollFrame:SetPoint("BOTTOMRIGHT", ScrollWrapper, "BOTTOMRIGHT", -3, 4);
-
-    local myChildFrame = CreateFrame("Frame", nil, myScrollFrame);
-    myChildFrame:SetSize(100, 600);
-    myChildFrame:SetPoint("TOP", myScrollFrame, "TOP", 15, -15);
-    myChildFrame:SetBackdropColor(0.1, 0.7, 0.1, 0.6);
-
-    myScrollFrame:SetScrollChild(myChildFrame);
-
-    local b = CreateFrame("Button", "MyButton", myChildFrame, "UIPanelButtonTemplate")
-    b:SetSize(80, 22) -- width, height
-    b:SetText("Button!")
-    b:SetPoint("TOP", myChildFrame, "TOP", 15, -15)
-
-    local b2 = CreateFrame("Button", "MyButton2", myChildFrame, "UIPanelButtonTemplate")
-    b:SetSize(80, 22) -- width, height
-    b:SetText("Button!")
-    b:SetPoint("BOTTOM", 15, 20)
-end
-
 function printSlashCommand()
     -- this execute chat slash command from user character
     DEFAULT_CHAT_FRAME.editBox:SetText("/script print(\"test\")");
@@ -116,8 +98,8 @@ end
 function ginvite(name)
     print('ginvite ', name);
     local command = "/ginvite " .. name;
-    DEFAULT_CHAT_FRAME.editBox:SetText(command);
-    ChatEdit_SendText(DEFAULT_CHAT_FRAME.editBox, 0);
+    --DEFAULT_CHAT_FRAME.editBox:SetText(command);
+    --ChatEdit_SendText(DEFAULT_CHAT_FRAME.editBox, 0);
 
     PlayerBlacklist[name] = 1;
 end
@@ -272,6 +254,7 @@ function createPlayerTable()
 
         row:SetPoint("TOP", 0, (i - 1) * -25);
         PlayerRows[i] = row;
+        row:Hide();
     end
 
 end
@@ -291,6 +274,8 @@ function updateDatagrid()
             local rowIndex = table.getn(filteredList) + 1;
             filteredList[rowIndex] = name;
             local currentRow = PlayerRows[rowIndex];
+            currentRow:Show();
+
             currentRow.username:SetText(name);
             currentRow.level:SetText(level);
             currentRow.class:SetText(class);
@@ -298,7 +283,9 @@ function updateDatagrid()
 
             currentRow.invButton:SetScript("OnClick", function()
                 ginvite(name)
+                -- update ui state --
                 updateDatagrid();
+                drawStatistics();
             end);
         end
     end
@@ -321,6 +308,7 @@ function updateDatagrid()
         PlayerRows[i]:Hide();
     end
 
+    updateTableCounters(table.getn(filteredList))
     print('datagrid update ended');
     -- test
 
@@ -358,6 +346,13 @@ end
 function clearBlacklist()
     print('clear blacklist init');
     PlayerBlacklist = {};
+end
+
+-- updates count row under players table
+function updateTableCounters(inTable)
+   TotalCount:SetText(TotalWhoResults);
+   NumResultsCount:SetText(CurrentWhoResults);
+   InTableCount:SetText(inTable or 0);
 end
 
 function old_scroll_load_function()
