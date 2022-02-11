@@ -30,7 +30,7 @@
          </Layer>
 
          <Layer>
-            <FontString name="$parentSettingTitle" inherits="GameFontHighlight" text="Guild invite manager (0.3)" justifyH="LEFT" justifyV="TOP">
+            <FontString name="$parentSettingTitle" inherits="GameFontHighlight" text="Guild invite manager (1.0)" justifyH="LEFT" justifyV="TOP">
                <Anchors>
                   <Anchor point="TOP" x="0" y="-12" />
                   <Anchor point="CENTER" relativeTo="$parent" x="0" y="0" />
@@ -40,7 +40,7 @@
       </Layers>
    </Frame>
 
-   <Button inherits="UIPanelButtonTemplate" text="toggle frame">
+   <Button inherits="UIPanelButtonTemplate" text="toggle GIM">
       <Size x="80" y="22" />
       <Scripts>
          <OnClick function="ToggleSetting"></OnClick>
@@ -85,38 +85,6 @@
       <NormalFont style="GameFontNormalHuge" />
    </Button>
 
-   <Button inherits="UIPanelButtonTemplate" text="Who upd" parent="FrameTestFrame">
-      <Size x="70" y="30" />
-      <Scripts>
-         <OnClick function="updateWho" />
-      </Scripts>
-      <Anchors>
-         <Anchor point="LEFT">
-            <Offset x="90" y="1" />
-         </Anchor>
-         <Anchor point="BOTTOM">
-            <Offset x="1" y="10" />
-         </Anchor>
-      </Anchors>
-      <NormalFont style="GameFontNormal" />
-   </Button>
-
-   <Button inherits="UIPanelButtonTemplate" text="Datagrid upd" parent="FrameTestFrame">
-      <Size x="70" y="30" />
-      <Scripts>
-         <OnClick function="updateDatagrid" />
-      </Scripts>
-      <Anchors>
-         <Anchor point="LEFT">
-            <Offset x="315" y="1" />
-         </Anchor>
-         <Anchor point="BOTTOM">
-            <Offset x="1" y="10" />
-         </Anchor>
-      </Anchors>
-      <NormalFont style="GameFontNormal" />
-   </Button>
-
    <Button inherits="UIPanelButtonTemplate" text="blacklist" parent="FrameTestFrame">
       <Size x="70" y="30" />
       <Scripts>
@@ -133,7 +101,7 @@
       <NormalFont style="GameFontNormal" />
    </Button>
 
-   <Button inherits="UIPanelButtonTemplate" text="clr blacklist" parent="FrameTestFrame">
+   <Button inherits="UIPanelButtonTemplate" text="clear blcklist" parent="FrameTestFrame">
       <Size x="70" y="30" />
       <Scripts>
          <OnClick function="clearBlacklist" />
@@ -141,6 +109,38 @@
       <Anchors>
          <Anchor point="LEFT">
             <Offset x="90" y="1" />
+         </Anchor>
+         <Anchor point="BOTTOM">
+            <Offset x="1" y="40" />
+         </Anchor>
+      </Anchors>
+      <NormalFont style="GameFontNormalSmall" />
+   </Button>
+
+   <Button name="EnableWhispButton" inherits="UIPanelButtonTemplate" text="Enable /w" parent="FrameTestFrame" enabled="false">
+      <Size x="70" y="30" />
+      <Scripts>
+         <OnClick function="enableWhisper" />
+      </Scripts>
+      <Anchors>
+         <Anchor point="LEFT">
+            <Offset x="240" y="1" />
+         </Anchor>
+         <Anchor point="BOTTOM">
+            <Offset x="1" y="40" />
+         </Anchor>
+      </Anchors>
+      <NormalFont style="GameFontNormal" />
+   </Button>
+
+   <Button inherits="UIPanelButtonTemplate" text="Set /w msg" parent="FrameTestFrame" enabled="false">
+      <Size x="70" y="30" />
+      <Scripts>
+         <OnClick function="whispSettingsToggle" />
+      </Scripts>
+      <Anchors>
+         <Anchor point="LEFT">
+            <Offset x="315" y="1" />
          </Anchor>
          <Anchor point="BOTTOM">
             <Offset x="1" y="40" />
@@ -237,7 +237,7 @@
                   <Anchor point="LEFT" relativeTo="$parent" x="5" y="0" />
                </Anchors>
             </FontString>
-            <FontString name="$parentTest1" inherits="GameFontNormalSmall" text="0" justifyH="LEFT" justifyV="TOP">
+            <FontString name="Settings_QueryDelay" inherits="GameFontNormalSmall" text="10" justifyH="LEFT" justifyV="TOP">
                <Anchors>
                   <Anchor point="TOP" x="0" y="-30" />
                   <Anchor point="LEFT" relativeTo="$parent" x="105" y="0" />
@@ -251,7 +251,7 @@
                   <Anchor point="LEFT" relativeTo="$parent" x="5" y="0" />
                </Anchors>
             </FontString>
-            <FontString name="$parentTest2" inherits="GameFontNormalSmall" text="false" justifyH="LEFT" justifyV="TOP">
+            <FontString name="Settings_UseWhisperFlag" inherits="GameFontNormalSmall" text="false" justifyH="LEFT" justifyV="TOP">
                <Anchors>
                   <Anchor point="TOP" x="0" y="-45" />
                   <Anchor point="LEFT" relativeTo="$parent" x="75" y="0" />
@@ -265,7 +265,7 @@
                   <Anchor point="LEFT" relativeTo="$parent" x="5" y="0" />
                </Anchors>
             </FontString>
-            <FontString name="$parentTest3" inherits="GameFontNormalSmall" text="Just test message..." justifyH="LEFT" justifyV="TOP">
+            <FontString name="Settings_WhispMessage" inherits="GameFontNormalSmall" text="Just test message..." justifyH="LEFT" justifyV="TOP">
                <Anchors>
                   <Anchor point="TOP" x="0" y="-60" />
                   <Anchor point="LEFT" relativeTo="$parent" x="70" y="0" />
@@ -371,7 +371,7 @@
          <Frame name="ScrollContainer">
             <Size x="70" y="250" />
             <Layers>
-               <Layer level="ARTWORK">
+               <!--<Layer level="ARTWORK">
                   <Texture file="Interface\Icons\Spell_Shadow_DemonicFortitude">
                      <Size x="30" y="30" />
                      <Anchors>
@@ -384,7 +384,7 @@
                   <Texture setAllPoint="true">
                      <Color r="0.5" g="0.1" b="0.1" a="0.3" />
                   </Texture>
-               </Layer>
+               </Layer>-->
             </Layers>
 
             <Frames name="SrollContainerFrames">

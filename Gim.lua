@@ -1,25 +1,11 @@
-local zone = nil
-local TimeSinceLastUpdate = 0
-local function UpdateCoordinates(self, elapsed)
-    if zone ~= GetRealZoneText() then
-        zone = GetRealZoneText()
-        SetMapToCurrentZone()
-    end
-    TimeSinceLastUpdate = TimeSinceLastUpdate + elapsed
-    if TimeSinceLastUpdate > .5 then
-        TimeSinceLastUpdate = 0
-        local posX, posY = GetPlayerMapPosition("player");
-        local x = math.floor(posX * 10000) / 100
-        local y = math.floor(posY * 10000) / 100
-        GimFontString:SetText("|c98FB98ff(" .. x .. ", " .. y .. ")")
-    end
-end
-
--- ================== CURRENT SETTINGS =======================
-
+-- SAVED SCOPE --
+--
+-- SAVED SCOPE END --
 -- GLOBAL SCOPE
 CurrentWhoResults = 0;
 TotalWhoResults = 0;
+InTableResults = 0;
+QueryDelay = 12;
 PlayerRows = {};
 -- GLOBAL SCOPE END
 
@@ -36,23 +22,23 @@ function Addon_OnLoad(self, event, ...)
 
     self:RegisterForDrag("LeftButton");
 
-    print('Gim: AddOn loaded');
+    print('|cffaa3aff Gim 1.0 |cffffffff (Guild invite manager): AddOn loaded');
 end
 
 function Addon_OnEvent(self, event, ...)
     if event == "ADDON_LOADED" then
-        print("------LOADED------");
         self:UnregisterEvent("ADDON_LOADED");
         -- elseif event == "ADDON_LOADED" and ... == "FrameTestFrame" then
         -- self:UnregisterEvent("ADDON_LOADED");
     elseif event == "PLAYER_LOGIN" then
         self:UnregisterEvent("PLAYER_LOGIN");
-        print('PLAYER_LOGIN EVENT');
+
         createPlayerTable();
         createStatistics();
+        updateSettingsBlock();
     elseif event == "WHO_LIST_UPDATE" then
         numResults, totalCount = GetNumWhoResults();
-        print("Gim: WHO_LIST_UPDATE EVENT FIRED. numResults: ", numResults, ", totalCount: ", totalCount);
+        --print("Gim: WHO_LIST_UPDATE EVENT FIRED. numResults: ", numResults, ", totalCount: ", totalCount);
         CurrentWhoResults = numResults;
         TotalWhoResults = totalCount;
         -- update ui state --
@@ -60,17 +46,22 @@ function Addon_OnEvent(self, event, ...)
         updateDatagrid();
     elseif event == "VARIABLES_LOADED" then
         -- все сохраненные переменные загружены
-        print('variables has been loaded');
-        if HaveWeMetCount == nil then
-            HaveWeMetCount = 0;
-        else
-            HaveWeMetCount = HaveWeMetCount + 1;
+
+        if AcceptedCount == nil then
+            AcceptedCount = 0;
         end
 
         if PlayerBlacklist == nil then
             PlayerBlacklist = {};
         end
-        print('HaveWeMetCount = ', HaveWeMetCount);
+
+        if UseWhisperFlag == nil then
+            UseWhisperFlag = false;
+        end
+
+        if WhispMessage == nil then
+            WhispMessage = "";
+        end
 
         -- test saved variables
         -- drawStatistics();
@@ -81,7 +72,6 @@ function drawWhoTable()
 end
 
 function ToggleSetting()
-    print('ToggleSetting init', FrameTestFrame:IsVisible());
     if (FrameTestFrame:IsVisible()) then
         HideUIPanel(FrameTestFrame);
     else
@@ -96,16 +86,22 @@ function printSlashCommand()
 end
 
 function ginvite(name)
-    print('ginvite ', name);
     local command = "/ginvite " .. name;
-    --DEFAULT_CHAT_FRAME.editBox:SetText(command);
-    --ChatEdit_SendText(DEFAULT_CHAT_FRAME.editBox, 0);
+    local whisp = "/w " .. name .. " " .. WhispMessage;
+
+    DEFAULT_CHAT_FRAME.editBox:SetText(command);
+    ChatEdit_SendText(DEFAULT_CHAT_FRAME.editBox, 0);
+
+    if UseWhisperFlag then
+        DEFAULT_CHAT_FRAME.editBox:SetText(whisp);
+        ChatEdit_SendText(DEFAULT_CHAT_FRAME.editBox, 0);
+    end
 
     PlayerBlacklist[name] = 1;
 end
 
 function updateWho()
-    print('updateWho init');
+    --print('updateWho init');
     SendWho("80-80");
 end
 
@@ -127,22 +123,56 @@ function get_keys(t)
     end
     return keys
 end
+
+local waitTable = {};
+local waitFrame = nil;
+function gim__wait(delay, func, ...)
+    if (type(delay) ~= "number" or type(func) ~= "function") then
+        return false;
+    end
+    if (waitFrame == nil) then
+        waitFrame = CreateFrame("Frame", "WaitFrame", UIParent);
+        waitFrame:SetScript("onUpdate", function(self, elapse)
+            local count = #waitTable;
+            local i = 1;
+            while (i <= count) do
+                local waitRecord = tremove(waitTable, i);
+                local d = tremove(waitRecord, 1);
+                local f = tremove(waitRecord, 1);
+                local p = tremove(waitRecord, 1);
+                if (d > elapse) then
+                    tinsert(waitTable, i, {d - elapse, f, p});
+                    i = i + 1;
+                else
+                    count = count - 1;
+                    f(unpack(p));
+                end
+            end
+        end);
+    end
+    tinsert(waitTable, {delay, func, {...}});
+    return true;
+end
 -- utils end
 
 -- stats interface
 function createStatistics()
     local f = StatsBlock;
-    f.blacklist = f:CreateFontString("$parentUsername", "OVERLAY", "GameFontWhiteSmall");
+    f.blacklist = f:CreateFontString(nil, "OVERLAY", "GameFontWhiteSmall");
     f.blacklist:SetText("Blacklist: " .. 0)
     f.blacklist:SetPoint("TOP", f, 0, -30)
     f.blacklist:SetPoint("LEFT", f, 5, 0)
 
-    f.invitesCount = f:CreateFontString("$parentHavemeet", "OVERLAY", "GameFontWhiteSmall");
+    f.invitesCount = f:CreateFontString(nil, "OVERLAY", "GameFontWhiteSmall");
     f.invitesCount:SetText("Invited: " .. 0)
     f.invitesCount:SetPoint("TOP", f, 0, -45)
     f.invitesCount:SetPoint("LEFT", f, 5, 0)
 
-    print('statistics was created');
+    f.acceptedCount = f:CreateFontString(nil, "OVERLAY", "GameFontWhiteSmall");
+    f.acceptedCount:SetText("Accepted: " .. 'N/D')
+    f.acceptedCount:SetPoint("TOP", f, 0, -60)
+    f.acceptedCount:SetPoint("LEFT", f, 5, 0)
+
     drawStatistics();
 end
 
@@ -155,8 +185,6 @@ function drawStatistics()
     -- StatsBlockUsername:SetText('sdakjdsakdasd') //можно еще по имени обращаться
     f.blacklist:SetText("Blacklist: " .. blacklistCount)
     f.invitesCount:SetText("Invited: " .. blacklistCount)
-
-    print('drawStatistics ended');
 end
 
 -- INIT FUNCTIONs
@@ -193,59 +221,15 @@ function createPlayerRow(name, parent, playername)
     f.guild:SetPoint("CENTER", f)
     f.guild:SetPoint("LEFT", f, 200, 0)
 
-    -- рабочий сниппет для FontString
-    -- local AddonFS = f:CreateFontString("$parentUsername", "OVERLAY", "GameFontNormalSmall")
-    -- AddonFS:SetText("Testtext")
-    -- AddonFS:SetPoint("CENTER",f,"LEFT",0,0) --обязательно должен быть родитель и позиция
-    -- AddonFS:SetPoint("CENTER", f)
-    -- AddonFS:SetPoint("LEFT", f, 0, 0)
-
     f.texture = f:CreateTexture();
     f.texture:SetAllPoints(f);
     f.texture:SetTexture(0.5, 0.5, 0.5, 0.3);
 
     return f;
-
-    -- f.mytext = f.CreateFontString();
-
-    -- f.mytext:SetSize(160, 40);
-    -- f.mytext:SetPoint("CENTER");
-    -- f.mytext:SetPoint("LEFT", "$parent", 0, 0);
-    -- f.mytext:SetText('asldaskjfka');
-    -- f.mytext:Show();
-
-    -- print('text isShown? ', f.mytext:isShow())
-    -- print('text isVisible? ', f.mytext:isVisible())
-
-    -- mytext:SetPoint("CENTER")
-    -- mytext:SetPoint("LEFT", 0, 0)
-    -- mytext:SetSize(200, 20)
-    -- mytext:SetFont("Fonts\\ARIALN.ttf", 13, "OUTLINE")
-    -- mytext:SetText("Avoidance: ")
-
-    -- f.count = f:CreateFontString("somename", "ARTWORK", "GameFontNormalSmall");
-    -- f.count:SetPoint("CENTER");
-    -- f.count:SetPoint("LEFT", 0, 0);
-    -- f.count:SetJustifyH("LEFT");
-    -- f.count:SetJustifyV("TOP");
-    -- f.count:SetText('sorrowfulpray')
-    -- f.count:Show();
-    -- f.count:Hide();
-
-    -- f:SetNormalTexture("Interface\\Buttons\\UI-Quickslot2");
-    -- f:SetPushedTexture("Interface\\Buttons\\UI-Quickslot-Depress");
-    -- f:SetHighlightTexture("Interface\\Buttons\\ButtonHilight-Square", "ADD");
-
-    -- f.texture = f:CreateTexture();
-    -- f.texture:SetAllPoints(f);
-    -- f.texture:SetTexture(0.5, 0.5, 0.5, 0.3);
-    -- f:CreateFontString("somestr", "OVERLAY", "GameFontNormalSmall")
-
 end
 
 -- вызывается один раз для создания фреймов в таблице
 function createPlayerTable()
-    print('CreatePlayerTable')
     ScrollContainer:SetHeight(1250)
 
     for i = 1, 50 do
@@ -260,15 +244,12 @@ function createPlayerTable()
 end
 
 function updateDatagrid()
-    print('CurrentWhoResults: ', CurrentWhoResults);
-    ScrollContainer:SetHeight(CurrentWhoResults * 25);
-
     local filteredList = {};
     local dummy = 0;
     for i = 1, CurrentWhoResults do
         local name, guild, level, race, class, zone, classFileName, sex = GetWhoInfo(i);
-        if PlayerBlacklist[name] then
-            print('player ' .. name .. ' in blacklist');
+        if PlayerBlacklist[name] or guild ~= "" then
+            -- print('player ' .. name .. ' in blacklist');
             dummy = 0;
         else
             local rowIndex = table.getn(filteredList) + 1;
@@ -279,36 +260,30 @@ function updateDatagrid()
             currentRow.username:SetText(name);
             currentRow.level:SetText(level);
             currentRow.class:SetText(class);
-            currentRow.guild:SetText(string.sub(guild, 1, 17));
+
+            -- currentRow.guild:SetText(string.sub(guild, 1, 17));
+            currentRow.guild:SetText("<Without guild>");
 
             currentRow.invButton:SetScript("OnClick", function()
                 ginvite(name)
                 -- update ui state --
                 updateDatagrid();
                 drawStatistics();
+
+                disableDatagridButtons();
+                updateBlacklist();
             end);
         end
     end
-
-    -- for i = 1, CurrentWhoResults do
-    -- local name, guild, level, race, class, zone, classFileName, sex = GetWhoInfo(i);
-    -- local currentRow = PlayerRows[i];
-
-    -- currentRow.username:SetText(name);
-    -- currentRow.level:SetText(level);
-    -- currentRow.class:SetText(class);
-    -- currentRow.guild:SetText(string.sub(guild, 1, 17));
-
-    -- currentRow.invButton:SetScript("OnClick", function()
-    --    ginvite(name)
-    -- end);
-    -- end
 
     for i = table.getn(filteredList) + 1, 50 do
         PlayerRows[i]:Hide();
     end
 
-    updateTableCounters(table.getn(filteredList))
+    InTableResults = table.getn(filteredList);
+    ScrollContainer:SetHeight(InTableResults * 25);
+
+    updateTableCounters()
     print('datagrid update ended');
     -- test
 
@@ -323,18 +298,12 @@ function testFrame()
         print(keys[i]);
     end
 
-    print('PlayerBlacklist: ', keys);
     -- createPlayerRow('test2', ScrollContainer)
     -- HideUIPanel(ScrollContainer);
 end
 
 function blacklistToggle()
-    blacklistString = '';
-    local keys = get_keys(PlayerBlacklist);
-    for i = 1, table.getn(keys) do
-        blacklistString = blacklistString .. ', ' .. keys[i]
-    end
-    TestEditBox:SetText(blacklistString)
+    updateBlacklist();
 
     if (BlacklistFrame:IsVisible()) then
         HideUIPanel(BlacklistFrame);
@@ -343,19 +312,75 @@ function blacklistToggle()
     end
 end
 
+function updateBlacklist()
+    blacklistString = '';
+    local keys = get_keys(PlayerBlacklist);
+    for i = 1, table.getn(keys) do
+        blacklistString = blacklistString .. keys[i] .. ', ';
+    end
+    TestEditBox:SetText(blacklistString)
+end
+
 function clearBlacklist()
-    print('clear blacklist init');
     PlayerBlacklist = {};
+
+    updateBlacklist();
 end
 
 -- updates count row under players table
-function updateTableCounters(inTable)
-   TotalCount:SetText(TotalWhoResults);
-   NumResultsCount:SetText(CurrentWhoResults);
-   InTableCount:SetText(inTable or 0);
+function updateTableCounters()
+    TotalCount:SetText(TotalWhoResults);
+    NumResultsCount:SetText(CurrentWhoResults);
+    InTableCount:SetText(InTableResults);
 end
 
-function old_scroll_load_function()
-    print('>> ScrollFrame_OnLOad init', ' ', event);
-    createPlayerRow('test2', ScrollContainer)
+function disableDatagridButtons()
+    for i = 1, 50 do
+        PlayerRows[i].invButton:Disable();
+    end
+
+    gim__wait(QueryDelay, enableDatagridButton);
+end
+
+function enableDatagridButton()
+    for i = 1, 50 do
+        PlayerRows[i].invButton:Enable();
+    end
+end
+
+function whispSettingsToggle()
+    if (WhispSettingsFrame:IsVisible()) then
+        HideUIPanel(WhispSettingsFrame);
+    else
+        ShowUIPanel(WhispSettingsFrame)
+    end
+end
+
+function saveWhispMessage()
+    WhispMessage = WhispEditBox:GetText()
+    updateSettingsBlock();
+    whispSettingsToggle();
+end
+
+function updateSettingsBlock()
+    Settings_QueryDelay:SetText(QueryDelay);
+
+    Settings_UseWhisperFlag:SetText(tostring(UseWhisperFlag));
+    if (UseWhisperFlag) then
+        EnableWhispButton:SetText("|cffff0000 Disable /w")
+    else
+        EnableWhispButton:SetText("|cff56ff00 Enable /w")
+    end
+
+    Settings_WhispMessage:SetText(string.sub(WhispMessage, 1, 14) .. "...");
+end
+
+function enableWhisper()
+    if (UseWhisperFlag) then
+        UseWhisperFlag = false;
+    else
+        UseWhisperFlag = true;
+    end
+
+    updateSettingsBlock();
 end

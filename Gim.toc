@@ -1,6 +1,6 @@
 ## Interface: 30300
 ## Title: Guild invite manager
-## SavedVariablesPerCharacter: HaveWeMetCount, PlayerBlacklist
+## SavedVariablesPerCharacter: AcceptedCount, PlayerBlacklist, UseWhisperFlag, WhispMessage
 ## Version: 1.0
 ## Notes: Guild invite manager
 ## Author: JustMonk
@@ -8,3 +8,4 @@
 Gim.lua
 Gim.xml
 GimBlacklist.xml
+GimWhispSettings.xml

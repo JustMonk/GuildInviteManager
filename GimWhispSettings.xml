@@ -1,0 +1,140 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\FrameXML\UI.xsd">
+   <Script file="Gim.lua" />
+
+   <!-- whisp settings frame -->
+   <Frame name="WhispSettingsFrame" enableMouse="true" movable="true" hidden="true" frameStrata="DIALOG" frameLevel="10">
+      <Scripts>
+         <OnLoad>self:RegisterForDrag("LeftButton");</OnLoad>
+         <OnDragStart>self:StartMoving();</OnDragStart>
+         <OnDragStop>self:StopMovingOrSizing();</OnDragStop>
+      </Scripts>
+      <Size>
+         <AbsDimension x="400" y="125" />
+      </Size>
+      <Anchors>
+         <Anchor point="CENTER" />
+      </Anchors>
+      <Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background" edgeFile="Interface\DialogFrame\UI-DialogBox-Border" tile="true">
+         <BackgroundInsets>
+            <AbsInset left="11" right="12" top="12" bottom="11" />
+         </BackgroundInsets>
+         <TileSize>
+            <AbsValue val="32" />
+         </TileSize>
+         <EdgeSize>
+            <AbsValue val="32" />
+         </EdgeSize>
+      </Backdrop>
+      <Layers>
+         <Layer level="BACKGROUND">
+            <Texture setAllPoints="true">
+               <Color r="0.4" g="0.4" b="0.4" a="0.3" />
+            </Texture>
+         </Layer>
+
+         <Layer>
+            <FontString name="SettingTitle" inherits="GameFontHighlight" text="Whisp message settings" justifyH="LEFT" justifyV="TOP">
+               <Anchors>
+                  <Anchor point="TOP" x="0" y="-12" />
+                  <Anchor point="LEFTCENTER" relativeTo="$parent" x="0" y="0" />
+               </Anchors>
+            </FontString>
+         </Layer>
+      </Layers>
+
+      <Frames>
+         <Frame name="WhispTextScrollWrapper">
+            <Size>
+               <AbsDimension x="370" y="35" />
+            </Size>
+            <Anchors>
+               <Anchor point="TOP">
+                  <Offset x="0" y="-45" />
+               </Anchor>
+               <Anchor point="LEFT">
+                  <Offset x="15" y="0" />
+               </Anchor>
+            </Anchors>
+            <Backdrop edgeFile="Interface\BUTTONS\UI-SliderBar-Border" tile="true">
+               <BackgroundInsets>
+                  <AbsInset left="11" right="12" top="12" bottom="11" />
+               </BackgroundInsets>
+               <TileSize>
+                  <AbsValue val="10" />
+               </TileSize>
+               <EdgeSize>
+                  <AbsValue val="10" />
+               </EdgeSize>
+            </Backdrop>
+            <Frames>
+               <EditBox name="WhispEditBox">
+                  <Size x="365" y="20" />
+                  <Anchors>
+                     <Anchor point="TOP" x="" y="-7" />
+                     <Anchor point="LEFT" x="5" y="0" />
+                  </Anchors>
+                  <Dimensions x="400" y="40" />
+                  <FontString inherits="GameFontNormal" />
+                  <Layers>
+                     <Layer level="BACKGROUND">
+                        <Texture setAllPoints="true">
+                           <Color r="0.4" g="0.4" b="0.4" a="0.3" />
+                        </Texture>
+                     </Layer>
+                  </Layers>
+               </EditBox>
+            </Frames>
+         </Frame>
+
+         <Button inherits="UIPanelButtonTemplate" text="accept">
+            <Size x="70" y="30" />
+            <Scripts>
+               <OnClick function="saveWhispMessage" />
+            </Scripts>
+            <Anchors>
+               <Anchor point="CENTER">
+                  <Offset x="-40" y="1" />
+               </Anchor>
+               <Anchor point="BOTTOM">
+                  <Offset x="1" y="15" />
+               </Anchor>
+            </Anchors>
+            <NormalFont style="GameFontNormal" />
+         </Button>
+
+         <Button inherits="UIPanelCloseButton">
+            <Size x="30" y="30" />
+            <Scripts>
+               <OnClick function="whispSettingsToggle" />
+            </Scripts>
+            <Anchors>
+               <Anchor point="TOP">
+                  <Offset x="0" y="-5" />
+               </Anchor>
+               <Anchor point="RIGHT">
+                  <Offset x="-5" y="0" />
+               </Anchor>
+            </Anchors>
+            <NormalFont style="GameFontNormal" />
+         </Button>
+
+         <Button inherits="UIPanelButtonTemplate" text="cancel">
+            <Size x="70" y="30" />
+            <Scripts>
+               <OnClick function="whispSettingsToggle" />
+            </Scripts>
+            <Anchors>
+               <Anchor point="CENTER">
+                  <Offset x="40" y="1" />
+               </Anchor>
+               <Anchor point="BOTTOM">
+                  <Offset x="1" y="15" />
+               </Anchor>
+            </Anchors>
+            <NormalFont style="GameFontNormal" />
+         </Button>
+      </Frames>
+
+   </Frame>
+
+</Ui>
