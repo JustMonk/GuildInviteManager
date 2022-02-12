@@ -1,4 +1,4 @@
-# GuildInviteHepler
+# Gim (Guild invite manager)
 
 ## Game version
 3.3.X
