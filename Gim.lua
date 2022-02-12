@@ -9,6 +9,10 @@ QueryDelay = 12;
 PlayerRows = {};
 -- GLOBAL SCOPE END
 
+-- open frame with slash command
+SLASH_GIM1 = '/gim';
+SlashCmdList["GIM"] = ToggleSetting;
+
 function Addon_OnLoad(self, event, ...)
     self:SetScript("OnEvent", Addon_OnEvent);
 
@@ -22,7 +26,7 @@ function Addon_OnLoad(self, event, ...)
 
     self:RegisterForDrag("LeftButton");
 
-    print('|cffaa3aff Gim 1.0 |cffffffff (Guild invite manager): AddOn loaded');
+    print('|cffbf6bff Gim |cff37f32b1.0|cffffffff (Guild invite manager) by|cffff7c0a JustMonk|cffffffff: AddOn loaded\n |cffbf6bffOpen settings|cffffffff: /gim');
 end
 
 function Addon_OnEvent(self, event, ...)
@@ -66,9 +70,6 @@ function Addon_OnEvent(self, event, ...)
         -- test saved variables
         -- drawStatistics();
     end
-end
-
-function drawWhoTable()
 end
 
 function ToggleSetting()
@@ -284,22 +285,6 @@ function updateDatagrid()
     ScrollContainer:SetHeight(InTableResults * 25);
 
     updateTableCounters()
-    print('datagrid update ended');
-    -- test
-
-end
-
-function testFrame()
-    print('test func init');
-
-    local keys = get_keys(PlayerBlacklist);
-
-    for i = 1, table.getn(keys) do
-        print(keys[i]);
-    end
-
-    -- createPlayerRow('test2', ScrollContainer)
-    -- HideUIPanel(ScrollContainer);
 end
 
 function blacklistToggle()

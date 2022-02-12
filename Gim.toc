@@ -1,5 +1,5 @@
 ## Interface: 30300
-## Title: Guild invite manager
+## Title: |cffbf6bffGim|cffffc800 (Guild invite manager)|cff00aa00 v1.0
 ## SavedVariablesPerCharacter: AcceptedCount, PlayerBlacklist, UseWhisperFlag, WhispMessage
 ## Version: 1.0
 ## Notes: Guild invite manager
